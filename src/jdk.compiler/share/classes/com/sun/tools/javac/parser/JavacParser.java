@@ -3127,11 +3127,19 @@ public class JavacParser implements Parser {
         case DO: {
             nextToken();
             JCStatement body = parseStatementAsBlock();
-            accept(WHILE);
-            JCExpression cond = parExpression();
-            accept(SEMI);
-            JCDoWhileLoop t = toP(F.at(pos).DoLoop(body, cond));
-            return t;
+			
+			if (token.kind == WHILE)
+			{
+				accept(WHILE);
+				JCExpression cond = parExpression();
+				accept(SEMI);
+				JCDoWhileLoop t = toP(F.at(pos).DoLoop(body, cond));
+				return t;
+			}
+			else
+			{
+				return body;
+			}
         }
         case TRY: {
             nextToken();
@@ -3247,18 +3255,32 @@ public class JavacParser implements Parser {
     /** CatchClause     = CATCH "(" FormalParameter ")" Block
      * TODO: the "FormalParameter" is not correct, it uses the special "catchTypes" rule below.
      */
-    protected JCCatch catchClause() {
+    protected JCCatch catchClause()
+	{
         int pos = token.pos;
         accept(CATCH);
-        accept(LPAREN);
-        JCModifiers mods = optFinal(Flags.PARAMETER);
-        List<JCExpression> catchTypes = catchTypes();
-        JCExpression paramType = catchTypes.size() > 1 ?
-                toP(F.at(catchTypes.head.getStartPosition()).TypeUnion(catchTypes)) :
-                catchTypes.head;
-        JCVariableDecl formal = variableDeclaratorId(mods, paramType, true, false, false);
-        accept(RPAREN);
-        JCBlock body = block();
+		
+		JCVariableDecl formal;
+		JCBlock body;
+		
+		if (token.kind == SEMI)
+		{
+			JCExpression type_exception = F.at(pos).Select(F.at(pos).Select(F.at(pos).Ident(names.fromString("java")), names.fromString("lang")), names.fromString("Exception"));
+			formal = F.at(pos).VarDef(F.at(pos).Modifiers(Flags.PARAMETER | Flags.FINAL), names.fromString("ignored"), type_exception, /*init*/ null);
+			body = F.at(pos).Block(0, List.nil());
+		}
+		else
+		{
+			accept(LPAREN);
+			JCModifiers mods = optFinal(Flags.PARAMETER);
+			List<JCExpression> catchTypes = catchTypes();
+			JCExpression paramType = catchTypes.size() > 1 ?
+					toP(F.at(catchTypes.head.getStartPosition()).TypeUnion(catchTypes)) :
+					catchTypes.head;
+			formal = variableDeclaratorId(mods, paramType, true, false, false);
+			accept(RPAREN);
+			body = block();
+		}
         return F.at(pos).Catch(formal, body);
     }
 
