@@ -3127,19 +3127,20 @@ public class JavacParser implements Parser {
         case DO: {
             nextToken();
             JCStatement body = parseStatementAsBlock();
+			JCExpression cond;
 			
 			if (token.kind == WHILE)
 			{
 				accept(WHILE);
-				JCExpression cond = parExpression();
+				cond = parExpression();
 				accept(SEMI);
-				JCDoWhileLoop t = toP(F.at(pos).DoLoop(body, cond));
-				return t;
 			}
 			else
 			{
-				return body;
+				cond = F.at(pos).Literal(false);
 			}
+			
+			return toP(F.at(pos).DoLoop(body, cond));
         }
         case TRY: {
             nextToken();
