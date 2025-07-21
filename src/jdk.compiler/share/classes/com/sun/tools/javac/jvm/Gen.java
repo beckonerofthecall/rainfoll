@@ -1535,7 +1535,7 @@ public class Gen extends JCTree.Visitor {
 
             @Override
             void afterBody() {
-                if (tree.finalizer != null && (tree.finalizer.flags & BODY_ONLY_FINALIZE) != 0) {
+                if (tree.finalizer != null && tree.finalizer instanceof JCBlock block && (block.flags & BODY_ONLY_FINALIZE) != 0) {
                     //for body-only finally, remove the GenFinalizer after try body
                     //so that the finally is not generated to catch bodies:
                     tryEnv.info.finalize = null;

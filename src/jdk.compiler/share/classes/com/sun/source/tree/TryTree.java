@@ -65,7 +65,7 @@ public interface TryTree extends StatementTree {
      * or {@code null} if there is none.
      * @return the finally block
      */
-    BlockTree getFinallyBlock();
+    StatementTree getFinallyBlock();
 
 
     /**

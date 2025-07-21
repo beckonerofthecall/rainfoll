@@ -4317,8 +4317,7 @@ public class Lower extends TreeTranslator {
 
         boolean hasBody = tree.body.getStatements().nonEmpty();
         boolean hasCatchers = tree.catchers.nonEmpty();
-        boolean hasFinally = tree.finalizer != null &&
-                tree.finalizer.getStatements().nonEmpty();
+        boolean hasFinally = tree.finalizer != null && (!(tree.finalizer instanceof JCBlock block) || block.getStatements().nonEmpty());
 
         if (!hasCatchers && !hasFinally) {
             result = translate(tree.body);

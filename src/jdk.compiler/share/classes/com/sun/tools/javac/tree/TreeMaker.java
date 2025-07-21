@@ -320,14 +320,14 @@ public class TreeMaker implements JCTree.Factory {
         return tree;
     }
 
-    public JCTry Try(JCBlock body, List<JCCatch> catchers, JCBlock finalizer) {
+    public JCTry Try(JCBlock body, List<JCCatch> catchers, JCStatement finalizer) {
         return Try(List.nil(), body, catchers, finalizer);
     }
 
     public JCTry Try(List<JCTree> resources,
                      JCBlock body,
                      List<JCCatch> catchers,
-                     JCBlock finalizer) {
+                     JCStatement finalizer) {
         JCTry tree = new JCTry(resources, body, catchers, finalizer);
         tree.pos = pos;
         return tree;

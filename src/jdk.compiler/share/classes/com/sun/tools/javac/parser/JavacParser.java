@@ -3157,7 +3157,7 @@ public class JavacParser implements Parser {
                 while (token.kind == CATCH) catchers.append(catchClause());
                 if (token.kind == FINALLY) {
                     nextToken();
-                    finalizer = block();
+                    finalizer = F.at(pos).Block(0, List.of(parseStatementAsBlock()));
                 }
             } else {
                 if (resources.isEmpty()) {

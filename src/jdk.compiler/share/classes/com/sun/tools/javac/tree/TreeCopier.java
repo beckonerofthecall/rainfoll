@@ -433,7 +433,7 @@ public class TreeCopier<P> implements TreeVisitor<JCTree,P> {
         List<JCTree> resources = copy(t.resources, p);
         JCBlock body = copy(t.body, p);
         List<JCCatch> catchers = copy(t.catchers, p);
-        JCBlock finalizer = copy(t.finalizer, p);
+        JCStatement finalizer = copy(t.finalizer, p);
         return M.at(t.pos).Try(resources, body, catchers, finalizer);
     }
 
