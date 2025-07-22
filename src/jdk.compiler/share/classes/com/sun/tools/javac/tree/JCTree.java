@@ -1493,13 +1493,13 @@ public abstract class JCTree implements Tree, Cloneable, DiagnosticPosition {
     public static class JCTry extends JCStatement implements TryTree {
         public JCBlock body;
         public List<JCCatch> catchers;
-        public JCStatement finalizer;
+        public JCBlock finalizer;
         public List<JCTree> resources;
         public boolean finallyCanCompleteNormally;
         protected JCTry(List<JCTree> resources,
                         JCBlock body,
                         List<JCCatch> catchers,
-                        JCStatement finalizer) {
+                        JCBlock finalizer) {
             this.body = body;
             this.catchers = catchers;
             this.finalizer = finalizer;
@@ -1517,7 +1517,7 @@ public abstract class JCTree implements Tree, Cloneable, DiagnosticPosition {
             return catchers;
         }
         @DefinedBy(Api.COMPILER_TREE)
-        public JCStatement getFinallyBlock() { return finalizer; }
+        public JCBlock getFinallyBlock() { return finalizer; }
         @Override @DefinedBy(Api.COMPILER_TREE)
         public <R,D> R accept(TreeVisitor<R,D> v, D d) {
             return v.visitTry(this, d);
@@ -3467,11 +3467,11 @@ public abstract class JCTree implements Tree, Cloneable, DiagnosticPosition {
         JCCase Case(CaseTree.CaseKind caseKind, List<JCCaseLabel> labels, JCExpression guard,
                     List<JCStatement> stats, JCTree body);
         JCSynchronized Synchronized(JCExpression lock, JCBlock body);
-        JCTry Try(JCBlock body, List<JCCatch> catchers, JCStatement finalizer);
+        JCTry Try(JCBlock body, List<JCCatch> catchers, JCBlock finalizer);
         JCTry Try(List<JCTree> resources,
                   JCBlock body,
                   List<JCCatch> catchers,
-                  JCStatement finalizer);
+                  JCBlock finalizer);
         JCCatch Catch(JCVariableDecl param, JCBlock body);
         JCConditional Conditional(JCExpression cond,
                                 JCExpression thenpart,
