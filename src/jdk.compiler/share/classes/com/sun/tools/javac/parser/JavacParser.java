@@ -3133,7 +3133,7 @@ public class JavacParser implements Parser {
         }
         case WHILE: {
             nextToken();
-            JCExpression cond = parExpression();
+            JCExpression cond = parseOptionalParenthesizedExpression();
             JCStatement body = parseStatementAsBlock();
             return F.at(pos).WhileLoop(cond, body);
         }
@@ -3181,7 +3181,7 @@ public class JavacParser implements Parser {
         }
         case SWITCH: {
             nextToken();
-            JCExpression selector = parExpression();
+            JCExpression selector = parseOptionalParenthesizedExpression();
             accept(LBRACE);
             List<JCCase> cases = switchBlockStatementGroups();
             JCSwitch t = to(F.at(pos).Switch(selector, cases));
@@ -3191,7 +3191,7 @@ public class JavacParser implements Parser {
         }
         case SYNCHRONIZED: {
             nextToken();
-            JCExpression lock = parExpression();
+            JCExpression lock = parseOptionalParenthesizedExpression();
             JCBlock body = block();
             return F.at(pos).Synchronized(lock, body);
         }
