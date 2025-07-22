@@ -2829,6 +2829,19 @@ public class JavacParser implements Parser {
         return toP(F.at(pos).Parens(t));
     }
 
+    /** Expression | ParExpression
+     */
+    JCExpression parseOptionalParenthesizedExpression() {
+        int pos = token.pos;
+		boolean foundParen;
+		if (foundParen = (token.kind == LPAREN))
+			nextToken();
+        JCExpression t = parseExpression();
+		if (foundParen)
+			accept(RPAREN);
+        return toP(F.at(pos).Parens(t));
+    }
+
     /** Block = "{" BlockStatements "}"
      */
     JCBlock block(int pos, long flags) {
@@ -3085,7 +3098,7 @@ public class JavacParser implements Parser {
             return block();
         case IF: {
             nextToken();
-            JCExpression cond = parExpression();
+            JCExpression cond = parseOptionalParenthesizedExpression();
             JCStatement thenpart = parseStatementAsBlock();
             JCStatement elsepart = null;
             if (token.kind == ELSE) {
